@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Пульт · Ядро искры</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+  :root{
+    --bg:#f1ead9; --paper:#fbf8f1; --ink:#1c1a16; --muted:#6b6253;
+    --bronze:#8a6d3b; --line:#dcd3bf; --graphite:#23211c;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;padding:16px;min-height:100vh}
+  .head{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+  .cube{width:34px;height:34px;border-radius:8px;background:var(--graphite);
+    display:flex;align-items:center;justify-content:center;color:var(--bronze);font-weight:700;font-family:Georgia,serif}
+  .head h1{font-family:Georgia,serif;font-size:20px;margin:0;font-weight:500}
+  .head .s{font-size:12px;color:var(--muted)}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+  .m{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+  .m .l{font-size:12px;color:var(--muted)}
+  .m .v{font-size:24px;font-weight:500;font-family:Georgia,serif;margin-top:2px}
+  .sect{font-size:12px;color:var(--bronze);text-transform:uppercase;letter-spacing:.6px;margin:14px 2px 8px;font-weight:600}
+  .btn{display:flex;align-items:center;gap:11px;width:100%;background:var(--paper);
+    border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:9px;
+    font-size:15px;color:var(--ink);text-align:left;cursor:pointer;transition:transform .05s}
+  .btn:active{transform:scale(.985);background:#f5efe2}
+  .btn .ic{width:30px;height:30px;border-radius:8px;background:var(--bg);
+    display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;color:var(--bronze)}
+  .btn .t{flex:1}
+  .btn .t b{display:block;font-weight:500}
+  .btn .t span{font-size:12px;color:var(--muted)}
+  .foot{text-align:center;font-size:11px;color:var(--muted);margin-top:18px;padding-bottom:20px}
+</style>
+</head>
+<body>
+
+<div class="head">
+  <div class="cube">Я</div>
+  <div><h1>Пульт</h1><div class="s">Ядро искры · дирижёр</div></div>
+</div>
+
+<div class="grid">
+  <div class="m"><div class="l">кулдауны</div><div class="v" id="m-cool">—</div></div>
+  <div class="m"><div class="l">кандидаты</div><div class="v" id="m-cand">—</div></div>
+  <div class="m"><div class="l">токены сегодня</div><div class="v" id="m-tok">—</div></div>
+  <div class="m"><div class="l">лент сегодня</div><div class="v" id="m-feed">—</div></div>
+</div>
+
+<div class="sect">разведка</div>
+<button class="btn" onclick="cmd('новости')"><div class="ic">⌕</div><div class="t"><b>Собрать ленту</b><span>утренняя сводка по рынку</span></div></button>
+<button class="btn" onclick="ask('конвейер','тема на разбор')"><div class="ic">→</div><div class="t"><b>Тема в конвейер</b><span>воркер разберёт в фоне</span></div></button>
+
+<div class="sect">разбор</div>
+<button class="btn" onclick="ask('разбор','тема разбора')"><div class="ic">◆</div><div class="t"><b>Инсайт-разбор</b><span>глубина голосом</span></div></button>
+<button class="btn" onclick="ask('реверс','платформа и узел')"><div class="ic">⚙</div><div class="t"><b>Реверс детали</b><span>инженерная карточка</span></div></button>
+<button class="btn" onclick="ask('контрагент','компания или человек')"><div class="ic">☉</div><div class="t"><b>Контрагент</b><span>досье</span></div></button>
+
+<div class="sect">память</div>
+<button class="btn" onclick="cmd('память')"><div class="ic">▤</div><div class="t"><b>Что в памяти</b><span>кулдауны и посты</span></div></button>
+
+<div class="foot">панель шлёт команду боту · данные обновятся при запуске</div>
+
+<script>
+  var TG = window.Telegram ? window.Telegram.WebApp : null;
+  if (TG) {
+    TG.ready(); TG.expand();
+    try {
+      var d = TG.initDataUnsafe || {};
+      if (d.user) { document.querySelector('.head .s').textContent = 'Ядро искры · ' + (d.user.first_name || 'дирижёр'); }
+    } catch (e) {}
+  }
+  function send(text) {
+    if (TG) { TG.sendData(text); TG.close(); }
+    else { alert('Откроется в Telegram. Команда: ' + text); }
+  }
+  function cmd(c) { send(c); }
+  function ask(c, hint) {
+    var v = prompt(hint);
+    if (v && v.trim()) { send(c + ' ' + v.trim()); }
+  }
+</script>
+</body>
+</html>
