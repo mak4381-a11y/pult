@@ -45,7 +45,7 @@
 <div class="grid">
   <div class="m"><div class="l">кулдауны</div><div class="v" id="m-cool">—</div></div>
   <div class="m"><div class="l">кандидаты</div><div class="v" id="m-cand">—</div></div>
-  <div class="m"><div class="l">токены сегодня</div><div class="v" id="m-tok">—</div></div>
+  <div class="m"><div class="l">сигналов сегодня</div><div class="v" id="m-tok">—</div></div>
   <div class="m"><div class="l">лент сегодня</div><div class="v" id="m-feed">—</div></div>
 </div>
 
@@ -81,6 +81,10 @@
     var v = prompt(hint);
     if (v && v.trim()) { send(c + ' ' + v.trim()); }
   }
+  fetch('metrics.json?_=' + Date.now()).then(function(r){ return r.json(); }).then(function(m){
+    function set(id, v){ var e = document.getElementById(id); if (e && v !== undefined && v !== null) e.textContent = v; }
+    set('m-cool', m.cooldowns); set('m-cand', m.candidates); set('m-tok', m.signals); set('m-feed', m.feed);
+  }).catch(function(){});
 </script>
 </body>
 </html>
